@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p>项目列表</p>
+<table cellspacing="0" cellpadding="1">
+    {% for project in projects %}
+        <tr>
+            <td>{{ project.project_name }}</td>
+            <td>{{ project.manager }}</td>
+        </tr>
+    {% endfor %}
+
+</table>
+</body>
+</html>

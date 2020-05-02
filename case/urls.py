@@ -14,5 +14,6 @@ urlpatterns = [
     path('run',views.run_case),                                     #用例执行
     path('importCase',views.import_case),                           #用例导入
     path('delete',views.del_case_byId),                             #删除用例
+    path('projects',views.project_html),                            #项目列表
 
 ]

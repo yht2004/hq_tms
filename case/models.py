@@ -47,7 +47,7 @@ class Case(BaseModel):
     judge_by = models.CharField(max_length=100,verbose_name='用例评审者')
     judge_result = models.SmallIntegerField(default=2, choices=judge_results, verbose_name='评审结果')
     case_statu = models.SmallIntegerField(default=0, choices=case_status, verbose_name='用例状态')
-    case_result = models.SmallIntegerField(default=0, choices=case_results, verbose_name='用例执行结果')
+    case_result = models.SmallIntegerField(default=1, choices=case_results, verbose_name='用例执行结果')
     remark = models.CharField(max_length=200,verbose_name='备注')
 
 

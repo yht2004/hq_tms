@@ -124,4 +124,8 @@ def import_case(request):
 
     return redirect('/case/case_html')
 
+def project_html(request):
+    projects = Project.objects.all()
+    return render(request,'project/project.html',{'projects':projects})
+
 

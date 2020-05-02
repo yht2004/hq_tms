@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'user',
     'case',
     'bootstrap3',
+    'resource',
 ]
 
 
