@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+<head>
+    <meta charset="UTF-8">
+    <title>demmo</title>
+
+</head>
+<body>
+        <ul>
+        {% for menu1 in menus %}
+            <li >
+                {{ menu1.menu_name }}  <!-- -->
+                {% for sub_menu in menu1.sub_menus %}
+                    <dl>
+                        <dd>
+                            {{ sub_menu.menu_name }}   <!-- -->
+                            {% for menu3 in sub_menu.sub_menus %}
+                                <dl>
+                                    <dd>{{ menu3.menu_name }}</dd>
+                                </dl>
+                            {% endfor %}
+
+                        </dd>
+                    </dl>
+                {% endfor %}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</body>
+</html>

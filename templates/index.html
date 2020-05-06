@@ -122,41 +122,45 @@
     </div>
     <div class="layui-side-scroll">
       <ul class="layui-nav layui-nav-tree site-demo-nav" lay-filter="side">
-        <li class="layui-nav-item"> <a class="javascript:;" href="javascript:;"> <i class="layui-icon iconfont" style="top: 3px;">&#xe625;</i><cite>测试管理</cite> </a>
-          <dl class="layui-nav-child">
-            <dd class=""> <a href="javascript:;" _href="member-list.html"> <cite>用例管理</cite> </a> </dd>
-            <dd class=""> <a href="javascript:;" _href="./member-del.html"> <cite>缺陷管理</cite> </a> </dd>
-            <dd class=""> <a href="javascript:;" _href="./member-level.html"> <cite>报告管理</cite> </a> </dd>
-          </dl>
-        </li>
-        <li class="layui-nav-item"> <a class="javascript:;" href="javascript:;"> <i class="layui-icon" style="top: 3px;">&#xe613;</i><cite>项目管理</cite> </a>
-          <dl class="layui-nav-child">
-            <dd class=""> <a href="javascript:;" _href="/case/projects"> <cite>项目管理</cite> </a> </dd>
-          </dl>
-        </li>
-        <li class="layui-nav-item"> <a class="javascript:;" href="javascript:;"> <i class="layui-icon" style="top: 3px;">&#xe629;</i><cite>系统管理</cite> </a>
-          <dl class="layui-nav-child">
-            <dd class=""> <a href="javascript:;" _href="./echart.html"> <cite>统计报表</cite> </a> </dd>
-          </dl>
-        </li>
-        <li class="layui-nav-item"> <a class="javascript:;" href="javascript:;"> <i class="layui-icon" style="top: 3px;">&#xe614;</i><cite>系统设置</cite> </a>
-          <dl class="layui-nav-child">
-            <dd class=""> <a href="javascript:;" _href="./sys-set.html"> <cite>系统设置</cite> </a> </dd>
-            <dd class=""> <a href="javascript:;" _href="./sys-data.html"> <cite>数字字典</cite> </a> </dd>
-            <dd class=""> <a href="javascript:;" _href="./sys-shield.html"> <cite>屏蔽词</cite> </a> </dd>
-            <dd class=""> <a href="javascript:;" _href="./sys-log.html"> <cite>系统日志</cite> </a> </dd>
-            <dd class=""> <a href="javascript:;" _href="./sys-link.html"> <cite>友情链接</cite> </a> </dd>
-            <dd class=""> <a href="javascript:;" _href="./sys-qq.html"> <cite>第三方登录</cite> </a> </dd>
-          </dl>
-        </li>
-        <li class="layui-nav-item" style="height: 30px; text-align: center"> </li>
+        {% for menu1 in menus %}
+            <li class="layui-nav-item"> <a class="javascript:;" href="javascript:;"> <span class="{{ menu1.icon }}" style="top: 3px;"></span><cite>{{ menu1.menu_name }}</cite> </a>
+                {% for sub_menu in menu1.sub_menus %}
+                    <dl class="layui-nav-child">
+                        <dd class=""><a href="javascript:;" _href="{{ sub_menu.url }}"><cite>{{ sub_menu.menu_name }}</cite> </a></dd>
+                    </dl>
+                {% endfor %}
+            </li>
+        {% endfor %}
+
+{#        <li class="layui-nav-item"> <a class="javascript:;" href="javascript:;"> <i class="layui-icon iconfont" style="top: 3px;">&#xe625;</i><cite>测试管理</cite> </a>#}
+{#          <dl class="layui-nav-child">#}
+{#            <dd class=""> <a href="javascript:;" _href="member-list.html"> <cite>用例管理</cite> </a> </dd>#}
+{#          </dl>#}
+{#        </li>#}
+{#        <li class="layui-nav-item"> <a class="javascript:;" href="javascript:;"> <i class="layui-icon" style="top: 3px;">&#xe613;</i><cite>项目管理</cite> </a>#}
+{#          <dl class="layui-nav-child">#}
+{#            <dd class=""> <a href="javascript:;" _href="/case/projects"> <cite>项目管理</cite> </a> </dd>#}
+{#          </dl>#}
+{#        </li>#}
+{#        <li class="layui-nav-item"> <a class="javascript:;" href="javascript:;"> <i class="layui-icon" style="top: 3px;">&#xe629;</i><cite>系统管理</cite> </a>#}
+{#          <dl class="layui-nav-child">#}
+{#            <dd class=""> <a href="javascript:;" _href="./echart.html"> <cite>统计报表</cite> </a> </dd>#}
+{#          </dl>#}
+{#        </li>#}
+{#        <li class="layui-nav-item"> <a class="javascript:;" href="javascript:;"> <i class="layui-icon" style="top: 3px;">&#xe614;</i><cite>系统设置</cite> </a>#}
+{#          <dl class="layui-nav-child">#}
+{#            <dd class=""> <a href="javascript:;" _href="./sys-set.html"> <cite>系统设置</cite> </a> </dd>#}
+{#            <dd class=""> <a href="javascript:;" _href="./sys-data.html"> <cite>数字字典</cite> </a> </dd>#}
+{#            <dd class=""> <a href="javascript:;" _href="./sys-shield.html"> <cite>屏蔽词</cite> </a> </dd>#}
+{#            <dd class=""> <a href="javascript:;" _href="./sys-log.html"> <cite>系统日志</cite> </a> </dd>#}
+{#            <dd class=""> <a href="javascript:;" _href="./sys-link.html"> <cite>友情链接</cite> </a> </dd>#}
+{#            <dd class=""> <a href="javascript:;" _href="./sys-qq.html"> <cite>第三方登录</cite> </a> </dd>#}
+{#          </dl>#}
+{#        </li>#}
+{#        <li class="layui-nav-item" style="height: 30px; text-align: center"> </li>#}
       </ul>
     </div>
   </div>
-
-
-
-
 
   <div class="layui-tab layui-tab-card site-demo-title x-main" lay-filter="x-tab" lay-allowclose="true" style="left: 220px;border-left: solid 2px #2299ee;">
     <ul class="layui-tab-title">
@@ -175,6 +179,8 @@
 <script src="{% static 'js/x-admin.js' %}"></script>
 <script src="{% static 'js/jquery-2.2.1.min.js' %}"></script>
 <script src="{% static 'js/x-layui.js' %}"></script>
+{% load bootstrap3 %}
+{% bootstrap_css %}
 
 <script>
     $(".daohang").click(function(){
