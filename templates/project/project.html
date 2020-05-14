@@ -4,17 +4,155 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="{% static 'css/layui/layui.css' %}" media="all">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
 </head>
-<body>
-<p>项目列表</p>
-<table cellspacing="0" cellpadding="1">
-    {% for project in projects %}
-        <tr>
-            <td>{{ project.project_name }}</td>
-            <td>{{ project.manager }}</td>
-        </tr>
-    {% endfor %}
+<style>
 
-</table>
+    #add-project {
+        display: none;
+    }
+
+</style>
+<body>
+<div class="table-name"><label id="descript" style="margin-top: 10px">项目列表</label></div>
+<table id="project-table" lay-filter="test" lay-data="{id:'id'}"></table>
+<div class="" id="add-project">
+    <form action="/project/add" method="post">
+        {% csrf_token %}
+        <div style="padding:10px;padding-left:60px;padding-top:40px;">
+            <lable><label style="color: red">*</label>项目名称：<input type="text" style="width:500px;height:30px;"
+                                                                  name="projectname" id="projectname"></lable>
+        </div>
+        <div style="padding:10px;padding-left:60px;padding-top:40px;">
+            <lable><label style="color: red">*</label>项目经理：<input type="text" style="width:500px;height:30px;"
+                                                                  name="projectmanager" id="projectmanager"></lable>
+        </div>
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline" style="margin-left: 41px;">
+                    <label class="layui-form-label">开始时间：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="test1" name="startdate" placeholder="yyyy-MM-dd">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">国际版</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="test1-1" placeholder="yyyy-MM-dd">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin-top: 300px;margin-left: 150px">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">确定</button>
+                <button type="reset" class="layui-btn layui-btn-primary" id="cannel">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/html" id="toolBar">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script src="{% static 'js/jquery-2.2.1.min.js' %}"></script>
+<script src="{% static 'js/layui/layui.js' %}"></script>
+<script>
+    // post请求csrf处理
+    $.ajaxSetup({
+        data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
+    });
+
+    //点击取消
+    $("#cannel").click(function () {
+        $("#add-project").style.display = 'none'
+    })
+    //时间控件
+    layui.use('laydate', function () {
+        var laydate = layui.laydate;
+
+        laydate.render({
+            elem: '#test1'
+        })
+    })
+    //表格
+    layui.use('table', function () {
+        var table = layui.table;
+        table.render({
+            elem: '#project-table',
+            url: '/project/prodata',       //数据接口
+            //height : 500,                //宽度
+            page: true,                    //分页
+            dataType: 'json',              //数据类型
+            toolbar: 'default',            //顶部工具栏
+            cellMinWidth: 80,              //最小列宽
+            id: 'id',                      //设置唯一id
+            cols: [[                       //表头
+                {type: 'checkbox', field: 'left'},
+                {type: 'numbers', title: '序号'},
+                {field: 'id', title: 'ID', sort: true, hide: true},
+                {field: 'name', title: '项目名称', sort: false},
+                {field: 'manager', title: '项目经理', sort: false},
+                {field: 'start_time', title: '开始时间', sort: true},
+                {fixed: 'right', title: '操作', width: 165, align: 'center', toolbar: '#toolBar'}
+            ]]
+        })
+        //监听顶部工具栏事件
+        table.on('toolbar(test)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id)
+                , data = checkStatus.data; //获取选中的数据
+            switch (obj.event) {
+                case 'add':
+                    layer.open({
+                        type: 1,
+                        title: '修改',               //不显示标题栏,
+                        closeBtn: false,
+                        area: ['700px', '700px'],
+                        //area: '300px;',
+                        shade: 0,                  //遮罩层阴影透明度
+                        id: 'LAY_layuipro',         //设定一个id，防止重复弹出,
+                        btn: ['确定', '取消'],
+                        btnAlign: 'c',
+                        moveType: 1,
+                        content: $('#add-project')
+                    });
+                    break;
+                case 'update':
+                    if (data.length === 0) {
+                        layer.msg('请选择一行');
+                    } else if (data.length > 1) {
+                        layer.msg('只能同时编辑一个');
+                    } else {
+                        layer.alert('编辑 [id]：' + checkStatus.data[0].id);
+                    }
+                    break;
+                case 'delete':
+                    if (data.length === 0) {
+                        layer.msg('请选择一行');
+                    } else {
+                        layer.confirm('确定要删除数据吗？', {btn: ['确定', '取消']}, function () {
+                            var selectId = checkStatus.data[0].id; //要删除数据的ID
+                            $.ajax({
+                                type: 'post',
+                                url: '/project/del',
+                                dataType: 'json',
+                                data: {
+                                    'id': selectId
+                                },
+                                success: function () {
+
+                                }
+                            })
+                            layer.msg('删除成功')
+                            window.location.reload()
+                        })
+                    }
+            }
+            ;
+        });
+    })
+</script>
 </body>
 </html>

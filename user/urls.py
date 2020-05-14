@@ -4,4 +4,5 @@ from user import views
 
 urlpatterns = [
     path('index',views.index),
+    path('dashboard',views.dashboard),
 ]

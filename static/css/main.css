@@ -1,3 +1,10 @@
-#bootstrap-table{
+.table-name{
+    font-size: 18px;
+    height: 45px;
+    border: 0;
+    background-color: #f2f2f2;
+}
+
+#descript{
 
 }

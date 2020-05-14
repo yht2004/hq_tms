@@ -1,4 +1,6 @@
 import json
+from datetime import *
+import time
 menu = {
     '北京':{
         '海淀':{
@@ -79,7 +81,13 @@ def show_Menu(ch):
         show_Menu(ch)
 #show_Menu(menus)
 
+print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime()))
 
+str = '2020-04-07 16:27:37+00:00'
+print(datetime.now())
+dt = datetime.now()
+print ('(%Y-%m-%d %H:%M:%S ): ', dt.strftime('%Y-%m-%d %H:%M:%S ')  )
+print ('(%Y-%m-%d  ): ', dt.strftime('%Y-%m-%d  ')  )
 
 
 

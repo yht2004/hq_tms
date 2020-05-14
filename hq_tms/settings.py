@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'case',
     'bootstrap3',
     'resource',
+    'project'
 ]
 
 
@@ -92,6 +93,7 @@ DATABASES = {
         'PASSWORD':'yanghongtao2004',
         'HOST':'localhost',
         'PORT':'3306',
+
     }
 }
 

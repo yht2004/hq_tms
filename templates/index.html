@@ -3,8 +3,10 @@
 {% load staticfiles %}
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Title</title>
-    <link rel="stylesheet" href={% static 'css/x-admin.css' %} media="all">
+    <link rel="stylesheet" href={% static 'css/x-admin.css' %}>
+    <link rel="stylesheet" href={% static 'css/main.css' %}>
 </head>
 <body>
 <div class="layui-layout layui-layout-admin">
@@ -47,7 +49,6 @@
       </ul>
     </div>
   </div>
-
   <!--左侧导航区域-->
   <div class="layui-side layui-bg-black x-side show_list" style="left:0px;" id="table1">
     <div style="height: 130px; width: 220px; ">
@@ -131,33 +132,6 @@
                 {% endfor %}
             </li>
         {% endfor %}
-
-{#        <li class="layui-nav-item"> <a class="javascript:;" href="javascript:;"> <i class="layui-icon iconfont" style="top: 3px;">&#xe625;</i><cite>测试管理</cite> </a>#}
-{#          <dl class="layui-nav-child">#}
-{#            <dd class=""> <a href="javascript:;" _href="member-list.html"> <cite>用例管理</cite> </a> </dd>#}
-{#          </dl>#}
-{#        </li>#}
-{#        <li class="layui-nav-item"> <a class="javascript:;" href="javascript:;"> <i class="layui-icon" style="top: 3px;">&#xe613;</i><cite>项目管理</cite> </a>#}
-{#          <dl class="layui-nav-child">#}
-{#            <dd class=""> <a href="javascript:;" _href="/case/projects"> <cite>项目管理</cite> </a> </dd>#}
-{#          </dl>#}
-{#        </li>#}
-{#        <li class="layui-nav-item"> <a class="javascript:;" href="javascript:;"> <i class="layui-icon" style="top: 3px;">&#xe629;</i><cite>系统管理</cite> </a>#}
-{#          <dl class="layui-nav-child">#}
-{#            <dd class=""> <a href="javascript:;" _href="./echart.html"> <cite>统计报表</cite> </a> </dd>#}
-{#          </dl>#}
-{#        </li>#}
-{#        <li class="layui-nav-item"> <a class="javascript:;" href="javascript:;"> <i class="layui-icon" style="top: 3px;">&#xe614;</i><cite>系统设置</cite> </a>#}
-{#          <dl class="layui-nav-child">#}
-{#            <dd class=""> <a href="javascript:;" _href="./sys-set.html"> <cite>系统设置</cite> </a> </dd>#}
-{#            <dd class=""> <a href="javascript:;" _href="./sys-data.html"> <cite>数字字典</cite> </a> </dd>#}
-{#            <dd class=""> <a href="javascript:;" _href="./sys-shield.html"> <cite>屏蔽词</cite> </a> </dd>#}
-{#            <dd class=""> <a href="javascript:;" _href="./sys-log.html"> <cite>系统日志</cite> </a> </dd>#}
-{#            <dd class=""> <a href="javascript:;" _href="./sys-link.html"> <cite>友情链接</cite> </a> </dd>#}
-{#            <dd class=""> <a href="javascript:;" _href="./sys-qq.html"> <cite>第三方登录</cite> </a> </dd>#}
-{#          </dl>#}
-{#        </li>#}
-{#        <li class="layui-nav-item" style="height: 30px; text-align: center"> </li>#}
       </ul>
     </div>
   </div>
@@ -168,7 +142,7 @@
     </ul>
     <div class="layui-tab-content site-demo site-demo-body">
       <div class="layui-tab-item layui-show">
-        <iframe frameborder="0" src="/case/case_html" class="x-iframe"></iframe>
+        <iframe frameborder="0" src="/dashboard" class="x-iframe"></iframe>
       </div>
     </div>
   </div>
@@ -191,8 +165,6 @@
         $(""+table+"").removeClass("hide_lits");
         $(""+table+"").addClass("show_list");
     })
-
-
 </script>
 <script>
     layui.use(['laydate','element','laypage','layer'], function(){

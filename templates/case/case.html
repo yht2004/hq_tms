@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <title>case</title>
     <script src="{% static 'js/jquery-2.2.1.min.js' %}"></script>
-    <script src="{%  static 'js/jquery-ui.js' %}"></script>
-    <script src="{%  static 'js/sweetalert-dev.js' %}"></script>
-    <script src="{%  static 'js/layer.js' %}"></script>
-    <script src="{%  static 'js/colResizable-1.6.min.js' %}"></script>
+    <script src="{% static 'js/jquery-ui.js' %}"></script>
+    <script src="{% static 'js/sweetalert-dev.js' %}"></script>
+    <script src="{% static 'js/layer.js' %}"></script>
+    <script src="{% static 'js/colResizable-1.6.min.js' %}"></script>
     {% load bootstrap3 %}
     {% bootstrap_css %}
     <link rel="stylesheet" href="{% static 'css/layer.css' %}">
@@ -23,71 +23,89 @@
     <script src="{% static 'js/bootstrap-table.min.js' %}"></script>
     <script src="{% static 'js/bootstrap-table-zh-CN.min.js' %}"></script>
     <script src="{% static 'js/bootstrap-table-resizable.min.js' %}"></script>
-
-
 </head>
-
 <body>
-    <div class="container">
-        <h3>测试用例</h3>
-        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addModal">添加</button>
-        <button class="btn btn-primary btn-sm" id="updateCase">修改</button>
-        <button class="btn btn-primary btn-sm" id="importCase">导入</button>
-        <button class="btn btn-primary btn-sm" id="exportCase">导出</button>
-        <table id="bootstrap-table" class="table table-striped table-condensed table-bordered" >
-{#            <caption><h4>测试用例</h4></caption>#}
-{#            <thead>#}
-{#                <tr>#}
-{#                    <th>用例编号</th>#}
-{#                    <th>所属项目</th>#}
-{#                    <th>所属模块</th>#}
-{#                    <th>相关需求</th>#}
-{#                    <th>用例名称</th>#}
-{#                    <th>前置条件</th>#}
-{#                    <th>执行步骤</th>#}
-{#                    <th>预期结果</th>#}
-{#                    <th>实际结果</th>#}
-{#                    <th>执行优先级</th>#}
-{#                    <th>用例类型</th>#}
-{#                    <th>用例编写者</th>#}
-{#                    <th>审核人</th>#}
-{#                    <th>审核结果</th>#}
-{#                    <th>用例状态</th>#}
-{#                    <th>用例结果</th>#}
-{#                    <th>操作</th>#}
-{#                </tr>#}
-{#            </thead>#}
-{#            {% for case in cases %}#}
-{#            <tr>#}
-{#                <td>{{ case.case_no }}</td>#}
-{#                <td>{{ case.project_name }}</td>#}
-{#                <td>{{ case.project_model }}</td>#}
-{#                <td>{{ case.project_desired }}</td>#}
-{#                <td>{{ case.case_title }}</td>#}
-{#                <td>{{ case.pre_condition }}</td>#}
-{#                <td>{{ case.run_step }}</td>#}
-{#                <td>{{ case.expect_result }}</td>#}
-{#                <td>{{ case.expect_reality }}</td>#}
-{#                <td>{{ case.level }}</td>#}
-{#                <td>{{ case.case_type }}</td>#}
-{#                <td>{{ case.create_by }}</td>#}
-{#                <td>{{ case.judge_by }}</td>#}
-{#                <td>{{ case.judge_result }}</td>#}
-{#                <td>{{ case.case_statu }}</td>#}
-{#                <td>{{ case.case_result }}</td>#}
-{#                <td>#}
-{#                    <button class="btn btn-primary btn-sm">执行</button>#}
-{#                    <a href={% url 'detail' case.id %}>执行</a>#}
-{#                    <a href="">修改</a>#}
-{#                    <a href="">删除</a>#}
-{#                </td>#}
-{#            </tr>#}
-{#            {% endfor %}#}
-        </table>
-        <form action="/case/add" method="post" role="form" class="form-horizontal" id="addForm" onsubmit="return">
+<div class="">
+    <h3>测试用例</h3>
+    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addModal">添加</button>
+    <button class="btn btn-primary btn-sm" id="updateCase">修改</button>
+    <button class="btn btn-primary btn-sm" id="importCase">导入</button>
+    <button class="btn btn-primary btn-sm" id="exportCase">导出</button>
+    <table id="bootstrap-table" class="table table-striped table-condensed table-bordered">
+    </table>
+    <form action="/case/add" method="post" role="form" class="form-horizontal" id="addForm" onsubmit="return">
+        {% csrf_token %}
+        <!-- 添加模态框（Modal） -->
+        <div class="modal fade in" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-hidden="true">×
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            添加用例
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label for="inputPassword" class="col-sm-2 control-label">用例名称</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="case_title" placeholder="请输入用例名称">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="selectProject" class="col-sm-2 control-label">选择项目</label>
+                                <div class="col-sm-10">
+                                    <select id="selectProject" class="form-control" name="project_name">
+                                        <option value="" selected:disabled>请选择项目</option>
+                                        {% for project in projects %}
+                                            <option>{{ project.project_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="selectProject" class="col-sm-2 control-label">用例类型</label>
+                                <div class="col-sm-10">
+                                    <select id="selectCaseType" class="form-control" name="case_type">
+                                        <option value="0">功能型</option>
+                                        <option value="1">页面校验</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPassword" class="col-sm-2 control-label">执行步骤</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" rows="3" name="run_step"></textarea>
+                                    {#                                      <input type="textarea" class="form-control" id="inputPassword" placeholder="">#}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPassword" class="col-sm-2 control-label">预期结果</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" rows="3" name="except_result"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-info">确定</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    </form>
+
+    <div>
+        <form action="/case/run" method="post" role="form" class="form-horizontal" id="addForm" onsubmit="return">
             {% csrf_token %}
-            <!-- 添加模态框（Modal） -->
-            <div class="modal fade in" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <!-- 用例执行拟态框（Modal） -->
+            <div class="modal fade in" id="RunModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -95,48 +113,42 @@
                                     aria-hidden="true">×
                             </button>
                             <h4 class="modal-title" id="myModalLabel">
-                                添加用例
+                                执行用例
                             </h4>
                         </div>
                         <div class="modal-body">
+                            <div class="form-group disabled">
+                                <div class="col-sm-10">
+                                    <input type="hidden" class="form-control" name="case_id" id="runcaseID">
+                                </div>
+                            </div>
                             <form class="form-horizontal" role="form">
                                 <div class="form-group">
                                     <label for="inputPassword" class="col-sm-2 control-label">用例名称</label>
                                     <div class="col-sm-10">
-                                      <input type="text" class="form-control" name="case_title"  placeholder="请输入用例名称">
+                                        <input type="text" class="form-control" name="case_title" id="runcaseName">
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="selectProject"  class="col-sm-2 control-label">选择项目</label>
-                                    <div class="col-sm-10">
-                                        <select id="selectProject" class="form-control" name="project_name">
-                                            <option value="" selected:disabled >请选择项目</option>
-                                            {% for project in projects %}
-                                                <option>{{ project.project_name }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="selectProject"  class="col-sm-2 control-label">用例类型</label>
-                                    <div class="col-sm-10">
-                                        <select id="selectCaseType" class="form-control" name="case_type">
-                                            <option value="0">功能型</option>
-                                            <option value="1">页面校验</option>
-                                        </select>
-                                    </div>
-                                </div>
+
                                 <div class="form-group">
                                     <label for="inputPassword" class="col-sm-2 control-label">执行步骤</label>
                                     <div class="col-sm-10">
-                                        <textarea class="form-control" rows="3" name="run_step"></textarea>
-{#                                      <input type="textarea" class="form-control" id="inputPassword" placeholder="">#}
+                                        <textarea class="form-control" rows="3" name="run_step"
+                                                  id="runcaseStep"></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputPassword" class="col-sm-2 control-label">预期结果</label>
                                     <div class="col-sm-10">
-                                      <textarea class="form-control" rows="3" name="except_result"></textarea>
+                                        <textarea class="form-control" rows="3" name="except_result"
+                                                  id="runcaseExcept"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputPassword" class="col-sm-2 control-label">实际结果</label>
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control" rows="3" name="expect_reality"
+                                                  id="expectReality"></textarea>
                                     </div>
                                 </div>
                             </form>
@@ -149,231 +161,178 @@
                 </div><!-- /.modal-dialog -->
             </div><!-- /.modal -->
         </form>
+    </div>
 
-        <div>
-            <form action="/case/run" method="post" role="form" class="form-horizontal" id="addForm" onsubmit="return">
-                {% csrf_token %}
-                <!-- 用例执行拟态框（Modal） -->
-                <div class="modal fade in" id="RunModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal"
-                                        aria-hidden="true">×
-                                </button>
-                                <h4 class="modal-title" id="myModalLabel">
-                                    执行用例
-                                </h4>
+    <!-- 用例修改拟态框 -->
+    <form action="/case/update" method="post" role="form" class="form-horizontal" id="updateForm" onsubmit="return">
+        {% csrf_token %}
+        <!-- 模态框（Modal） -->
+        <div class="modal fade in" id="updateModal" tabindex="-1" role="dialog" data-backdrop="static"
+             data-keyboard="flase"
+             aria-labelledby="updateModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-hidden="true">×
+                        </button>
+                        <h4 class="modal-title" id="updateModalLabel">
+                            修改用例
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" role="form" id="dataForm">
+                            <div class="form-group disabled">
+                                <div class="col-sm-10">
+                                    <input type="hidden" class="form-control" name="case_id" id="caseID">
+                                </div>
                             </div>
-                            <div class="modal-body">
-                                <div class="form-group disabled">
-                                    <div class="col-sm-10">
-                                        <input type="hidden" class="form-control" name="case_id" id="runcaseID">
-                                    </div>
+                            <div class="form-group">
+                                <label for="inputPassword" class="col-sm-2 control-label">用例名称</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="case_title" id="caseName">
                                 </div>
-                                <form class="form-horizontal" role="form">
-                                    <div class="form-group">
-                                        <label for="inputPassword" class="col-sm-2 control-label">用例名称</label>
-                                        <div class="col-sm-10">
-                                          <input type="text" class="form-control" name="case_title" id="runcaseName">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="inputPassword" class="col-sm-2 control-label">执行步骤</label>
-                                        <div class="col-sm-10">
-                                            <textarea class="form-control" rows="3" name="run_step" id="runcaseStep"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inputPassword" class="col-sm-2 control-label">预期结果</label>
-                                        <div class="col-sm-10">
-                                          <textarea class="form-control" rows="3" name="except_result" id="runcaseExcept"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inputPassword" class="col-sm-2 control-label">实际结果</label>
-                                        <div class="col-sm-10">
-                                          <textarea class="form-control" rows="3" name="expect_reality" id="expectReality"></textarea>
-                                        </div>
-                                    </div>
-                                </form>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                <button type="submit" class="btn btn-info">确定</button>
+                            <div class="form-group">
+                                <label for="selectProject" class="col-sm-2 control-label">选择项目</label>
+                                <div class="col-sm-10">
+                                    <select id="selectProject" class="form-control" name="project_name">
+                                        {% for project in projects %}
+                                            <option>{{ project.project_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
                             </div>
-                        </div><!-- /.modal-content -->
-                    </div><!-- /.modal-dialog -->
-                </div><!-- /.modal -->
-            </form>
-        </div>
-
-        <!-- 用例修改拟态框 -->
-        <form action="/case/update" method="post" role="form" class="form-horizontal" id="updateForm" onsubmit="return">
-            {% csrf_token %}
-            <!-- 模态框（Modal） -->
-            <div class="modal fade in" id="updateModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="flase"
-                 aria-labelledby="updateModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"
-                                    aria-hidden="true">×
-                            </button>
-                            <h4 class="modal-title" id="updateModalLabel">
-                                修改用例
-                            </h4>
-                        </div>
-                        <div class="modal-body">
-                            <form class="form-horizontal" role="form" id="dataForm">
-                                <div class="form-group disabled">
-                                    <div class="col-sm-10">
-                                        <input type="hidden" class="form-control" name="case_id" id="caseID">
-                                    </div>
+                            <div class="form-group">
+                                <label for="selectProject" class="col-sm-2 control-label">用例类型</label>
+                                <div class="col-sm-10">
+                                    <select id="caseType" class="form-control" name="case_type">
+                                        <option value="0">功能型</option>
+                                        <option value="1">页面校验</option>
+                                    </select>
                                 </div>
-                                <div class="form-group">
-                                    <label for="inputPassword" class="col-sm-2 control-label">用例名称</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="case_title" id="caseName">
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPassword" class="col-sm-2 control-label">执行步骤</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" rows="3" name="run_step" id="runStep"></textarea>
                                 </div>
-                                <div class="form-group">
-                                    <label for="selectProject"  class="col-sm-2 control-label">选择项目</label>
-                                    <div class="col-sm-10">
-                                        <select id="selectProject" class="form-control" name="project_name">
-                                            {% for project in projects %}
-                                                <option>{{ project.project_name }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPassword" class="col-sm-2 control-label">预期结果</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" rows="3" name="except_result"
+                                              id="exceptResult"></textarea>
                                 </div>
-                                <div class="form-group">
-                                    <label for="selectProject"  class="col-sm-2 control-label">用例类型</label>
-                                    <div class="col-sm-10">
-                                        <select id="caseType" class="form-control" name="case_type" >
-                                            <option value="0">功能型</option>
-                                            <option value="1">页面校验</option>
-                                        </select>
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPassword" class="col-sm-2 control-label">实际结果</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" rows="3" name="expect_reality"
+                                              id="updatecaseExpect_reality"></textarea>
                                 </div>
-                                <div class="form-group">
-                                    <label for="inputPassword" class="col-sm-2 control-label">执行步骤</label>
-                                    <div class="col-sm-10">
-                                        <textarea class="form-control" rows="3" name="run_step" id="runStep"></textarea>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputPassword" class="col-sm-2 control-label" >预期结果</label>
-                                    <div class="col-sm-10">
-                                      <textarea class="form-control" rows="3" name="except_result" id="exceptResult"></textarea>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputPassword" class="col-sm-2 control-label" >实际结果</label>
-                                    <div class="col-sm-10">
-                                      <textarea class="form-control" rows="3" name="expect_reality" id="updatecaseExpect_reality"></textarea>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            <button type="submit" class="btn btn-info">确定</button>
-                        </div>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
-        </form>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-info">确定</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    </form>
 
     <!-- 用例导入拟态框 -->
-        <form action="/case/importCase" method="post" role="form" class="form-horizontal" enctype="multipart/form-data"  onsubmit="return">
-            {% csrf_token %}
-            <!-- 模态框（Modal） -->
-            <div class="modal fade in" id="importCaseModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="flase"
-                 aria-labelledby="updateModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"
-                                    aria-hidden="true">×
-                            </button>
-                            <h4 class="modal-title" id="updateModalLabel">
-                                导入用例
-                            </h4>
-                        </div>
-                        <div class="modal-body">
-                            <form class="form-horizontal" role="form">
-                                <div class="form-group">
-                                    <label for="inputPassword" class="col-sm-2 control-label">文件名称</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="file_name" >
-                                    </div>
+    <form action="/case/importCase" method="post" role="form" class="form-horizontal" enctype="multipart/form-data"
+          onsubmit="return">
+        {% csrf_token %}
+        <!-- 模态框（Modal） -->
+        <div class="modal fade in" id="importCaseModal" tabindex="-1" role="dialog" data-backdrop="static"
+             data-keyboard="flase"
+             aria-labelledby="updateModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-hidden="true">×
+                        </button>
+                        <h4 class="modal-title" id="updateModalLabel">
+                            导入用例
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label for="inputPassword" class="col-sm-2 control-label">文件名称</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="file_name">
                                 </div>
-                                <div class="form-group">
-                                    <label for="selectProject"  class="col-sm-2 control-label">选择项目</label>
-                                    <div class="col-sm-10">
-                                        <select  class="form-control" name="project_name">
-                                            <option value="" selected:disabled >请选择项目</option>
-                                            {% for project in projects %}
-                                                <option>{{ project.project_name }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="selectProject" class="col-sm-2 control-label">选择项目</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" name="project_name">
+                                        <option value="" selected:disabled>请选择项目</option>
+                                        {% for project in projects %}
+                                            <option>{{ project.project_name }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
-                                <div class="form-group disabled">
-                                    <label for="inputPassword" class="col-sm-2 control-label">导入文件</label>
-                                    <div class="col-sm-10">
-                                        <input type="file" class="form-control" name="case_file">
-                                    </div>
+                            </div>
+                            <div class="form-group disabled">
+                                <label for="inputPassword" class="col-sm-2 control-label">导入文件</label>
+                                <div class="col-sm-10">
+                                    <input type="file" class="form-control" name="case_file">
                                 </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            <button type="submit" class="btn btn-info">确定</button>
-                        </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-info">确定</button>
                     </div>
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
+</div>
 
 </body>
 <script>
     //注册表格操作栏事件
     window.operateEvents = {
-            'click .RunCase': function (e, value, row, index) {
+        'click .RunCase': function (e, value, row, index) {
 
-            },
-            'click .UpdateCase': function (e, value, row, index) {
-                editCaseById(row,index)
-            },
-            //获取行的数据，把数据回显到执行modal
-            'click .run': function (e, value, row, index) {
-                data = JSON.stringify(row)
-                data_json = JSON.parse(data)
-                console.log('格式后的数据：',data_json)
-                $("#runcaseID").val(data_json['id'])
-                $("#runcaseName").val(data_json['case_name'])
-                $("#runcaseStep").val(data_json['run_step'])
-                $("#runcaseExcept").val(data_json['expect_result'])
-                $('#RunModal').modal('show')
-            },
-            //获取行的数据，把数据回显到执行modal
-            'click .remove': function (e, value, row, index) {
-                data = JSON.stringify(row)
-                data_json = JSON.parse(data)
-                console.log('格式后的数据：',data_json['id'])
+        },
+        'click .UpdateCase': function (e, value, row, index) {
+            editCaseById(row, index)
+        },
+        //获取行的数据，把数据回显到执行modal
+        'click .run': function (e, value, row, index) {
+            data = JSON.stringify(row)
+            data_json = JSON.parse(data)
+            console.log('格式后的数据：', data_json)
+            $("#runcaseID").val(data_json['id'])
+            $("#runcaseName").val(data_json['case_name'])
+            $("#runcaseStep").val(data_json['run_step'])
+            $("#runcaseExcept").val(data_json['expect_result'])
+            $('#RunModal').modal('show')
+        },
+        //获取行的数据，把数据回显到执行modal
+        'click .remove': function (e, value, row, index) {
+            data = JSON.stringify(row)
+            data_json = JSON.parse(data)
+            console.log('格式后的数据：', data_json['id'])
 
-                layer.confirm('确定要删除数据吗？',{
-                    btn: ['确定','取消']
-                },function () {
-                    $("#bootstrap-table").bootstrapTable('remove',{
-                    field:'id',
-                    values:[row.id]
-                    })
-                    $.ajax({
+            layer.confirm('确定要删除数据吗？', {
+                btn: ['确定', '取消']
+            }, function () {
+                $("#bootstrap-table").bootstrapTable('remove', {
+                    field: 'id',
+                    values: [row.id]
+                })
+                $.ajax({
                     type: 'POST', // 规定请求的类型（GET 或 POST）
                     url: '/case/delete', // 请求的url地址
                     dataType: 'json', //预期的服务器响应的数据类型
@@ -384,36 +343,36 @@
 
                     },
                 })
-                    layer.msg('删除成功',{icon:1,time:3000});
-                    //window.location.reload()
-                },function () {
-                    window.location.reload()
-                })
+                layer.msg('删除成功', {icon: 1, time: 3000});
+                //window.location.reload()
+            }, function () {
+                window.location.reload()
+            })
 
 
-            },
+        },
     }
 
     //模态框取消后清除之前所填的数据
-    $('#updateModal').on('hidden.bs.modal',  function () {
-            document.getElementById("updateForm").reset()
+    $('#updateModal').on('hidden.bs.modal', function () {
+        document.getElementById("updateForm").reset()
     });
 
     //模态框拖动设置
-    $(document).on("show.bs.modal", ".modal", function(){
+    $(document).on("show.bs.modal", ".modal", function () {
         $(this).draggable({
-        //handle: ".modal-header"   // 只能点击头部拖动
+            //handle: ".modal-header"   // 只能点击头部拖动
         });
         $(this).css("overflow", "hidden"); // 防止出现滚动条，出现的话，你会把滚动条一起拖着走的
     });
 
     // post请求csrf处理
     $.ajaxSetup({
-        data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+        data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
     });
 
     $('#bootstrap-table').bootstrapTable({
-        url:"/case/get_case",               //从后台获取数据时，可以是json数组，也可以是json对象
+        url: "/case/get_case",               //从后台获取数据时，可以是json数组，也可以是json对象
         dataType: "json",
         method: 'get',                      //请求方式（*）
         toolbar: '#toolbar',                //工具按钮用哪个容器
@@ -424,8 +383,8 @@
         sortOrder: "asc",
         //singleSelect: true,                 //开启单选
         clickToSelect: true,                //启用点击选中行
-        uniqueId : 'id',
-        columns:[
+        uniqueId: 'id',
+        columns: [
             {
                 checkbox: true
             },
@@ -470,12 +429,12 @@
                 title: '实际结果',
                 visible: false
             },
-             {
+            {
                 field: 'case_statu',
                 title: '用例状态',
                 align: 'center'
             },
-             {
+            {
                 field: 'case_result',
                 title: '执行结果',
                 align: 'center'
@@ -507,7 +466,7 @@
         openUpdateModal()
     })
 
-        //弹出修改模态框
+    //弹出修改模态框
     function openUpdateModal() {
         $('#updateModalLabel').text('修改')
         $('#dataForm').prop('action', '/case/update')
@@ -534,11 +493,11 @@
     }
 
     //弹出修改模态框回显数据
-    function EditViewById(row, index){
+    function EditViewById(row, index) {
         var data = JSON.stringify($("#bootstrap-table").bootstrapTable('getData')); //获取全部数据
         var data_json = JSON.parse(data);
-        console.log('数据id：',index);
-        console.log('数据：',data_json);
+        console.log('数据id：', index);
+        console.log('数据：', data_json);
         //根据index找到对应行数据，填充数据到修改模态框
         $("#caseName").val(data_json[index].case_name);
         $("#selectProject").val(data_json[index].project_name);
@@ -552,33 +511,33 @@
     }
 
     //用例执行模态框
-    function RunViewById(row, index){
-        var data = JSON.stringify($("#bootstrap-table").bootstrapTable('getRowByUniqueId',index)); //获取全部数据
+    function RunViewById(row, index) {
+        var data = JSON.stringify($("#bootstrap-table").bootstrapTable('getRowByUniqueId', index)); //获取全部数据
         var data_json = JSON.parse(data);
-        console.log('数据id：',index);
+        console.log('数据id：', index);
         console.log(data_json);
         $('#RunModal').modal('show')
     }
 
     //表格宽度拖动
     $('#bootstrap-table').colResizable({
-        liveRegion:true,
-        gripInnerHtml:"<div class='grip'></div>",
+        liveRegion: true,
+        gripInnerHtml: "<div class='grip'></div>",
         postbackSafe: true,
-        headerOnly:true,
-        resizeMode:"overflow",
+        headerOnly: true,
+        resizeMode: "overflow",
     })
 
     //导出用例
     $('#exportCase').click(function () {
-            $.ajax({
-                type: 'POST', // 规定请求的类型（GET 或 POST）
-                url: '/case/export', // 请求的url地址
-                //dataType: 'text', //预期的服务器响应的数据类型
-                success: function (data) { // 当请求成功时运行的函数
+        $.ajax({
+            type: 'POST', // 规定请求的类型（GET 或 POST）
+            url: '/case/export', // 请求的url地址
+            //dataType: 'text', //预期的服务器响应的数据类型
+            success: function (data) { // 当请求成功时运行的函数
 
-                },
-            })
+            },
+        })
     })
 
     //用例导入
